@@ -57,6 +57,10 @@ public abstract class WorkerImpl<T> implements Worker<T>,Runnable {
         return jobQueue.offer(job);
     }
 
+    public boolean hasRemaining()  {
+        return jobQueue.isEmpty() ==false;
+    }
+
     public void stop() {
         logger.debug("Stopping workerImpl internal thread");
         this.forcedQuit = true;

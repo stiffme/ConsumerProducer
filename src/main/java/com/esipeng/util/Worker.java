@@ -9,5 +9,5 @@ public interface Worker<T> {
     boolean post(T job);
     void executeJob(T job);
     void join();
-
+    boolean hasRemaining();
 }
