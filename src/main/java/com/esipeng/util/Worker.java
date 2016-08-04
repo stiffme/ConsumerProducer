@@ -10,4 +10,5 @@ public interface Worker<T> {
     void executeJob(T job);
     void join();
     boolean hasRemaining();
+    void setMaxSize(int vl);
 }

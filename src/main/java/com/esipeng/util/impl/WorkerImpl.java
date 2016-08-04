@@ -15,12 +15,20 @@ public abstract class WorkerImpl<T> implements Worker<T>,Runnable {
     private Thread workerThread;
     private LinkedBlockingQueue<T> jobQueue;
     private boolean forcedQuit;
+    private int maxSize;
+
 
     public WorkerImpl () {
         logger.debug("Initializing WorkerImpl");
         workerThread = new Thread(this);
         jobQueue = new LinkedBlockingQueue<T>();
         forcedQuit = false;
+        this.maxSize = -1;
+    }
+
+
+    public void setMaxSize(int vl) {
+        this.maxSize = vl;
     }
 
     public void run() {
@@ -54,7 +62,15 @@ public abstract class WorkerImpl<T> implements Worker<T>,Runnable {
         logger.debug("Adding a new job {}",job);
 
 
-        return jobQueue.offer(job);
+        boolean ret = jobQueue.offer(job);
+        while( maxSize >0 && jobQueue.size() >= maxSize)   {
+            try{
+                jobQueue.take();
+            } catch (InterruptedException e)    {
+
+            }
+        }
+        return  ret;
     }
 
     public boolean hasRemaining()  {
